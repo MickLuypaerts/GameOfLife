@@ -20,10 +20,7 @@ func main() {
 	http.HandleFunc("/resetboard", resetBoard)
 	http.HandleFunc("/getboardsize", getBoardSize)
 	gameState.Board.Reset()
-	err := http.ListenAndServe(":3000", nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
 
 func getBoardSize(w http.ResponseWriter, r *http.Request) {
