@@ -11,12 +11,14 @@ import (
 var gameState game.Game
 
 func main() {
+	port := ":3000"
 	gameState.InitGame(50, 50)
-	mux := defaultMux()
-	log.Fatal(http.ListenAndServe(":3000", mux))
+	mux := Mux()
+	log.Printf("Starting the server on %s\n", port)
+	log.Fatal(http.ListenAndServe(port, mux))
 }
 
-func defaultMux() *http.ServeMux {
+func Mux() *http.ServeMux {
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/", fs)
@@ -25,19 +27,6 @@ func defaultMux() *http.ServeMux {
 	mux.HandleFunc("/resetboard", resetBoard)
 	mux.HandleFunc("/getboardsize", getBoardSize)
 	return mux
-}
-
-func getBoardSize(w http.ResponseWriter, r *http.Request) {
-	log.Println("Sending board size")
-	w.WriteHeader(200)
-	json.NewEncoder(w).Encode(gameState.Board.BoardSize)
-}
-
-func resetBoard(w http.ResponseWriter, r *http.Request) {
-	log.Println("reseting board.")
-	w.WriteHeader(200)
-	w.Write([]byte(`{"msg": "the board has been reset."}`))
-	gameState.Board.Reset()
 }
 
 func setCell(w http.ResponseWriter, r *http.Request) {
@@ -60,4 +49,17 @@ func step(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Changed cells: %+v\n", gameState.ChangedCells)
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(gameState.ChangedCells)
+}
+
+func resetBoard(w http.ResponseWriter, r *http.Request) {
+	log.Println("reseting board.")
+	w.WriteHeader(200)
+	w.Write([]byte(`{"msg": "the board has been reset."}`))
+	gameState.Board.Reset()
+}
+
+func getBoardSize(w http.ResponseWriter, r *http.Request) {
+	log.Println("Sending board size")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(gameState.Board.BoardSize)
 }
