@@ -22,6 +22,7 @@ func Mux(gameState *game.Game) *http.ServeMux {
 	mux.HandleFunc("/step", gameHandlers.step)
 	mux.HandleFunc("/resetboard", gameHandlers.resetBoard)
 	mux.HandleFunc("/getboardsize", gameHandlers.getBoardSize)
+	mux.HandleFunc("/createnewboard", gameHandlers.createNewBoard)
 	return mux
 }
 
@@ -55,7 +56,24 @@ func (gs *gameHandlers) resetBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (gs *gameHandlers) getBoardSize(w http.ResponseWriter, r *http.Request) {
-	log.Println("Sending board size")
+	log.Println("Sending board size.")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(gs.gameState.Board.BoardSize)
+}
+
+func (gs *gameHandlers) createNewBoard(w http.ResponseWriter, r *http.Request) {
+
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	log.Printf("Creating new board: %+v", string(reqBody))
+
+	data := game.Option{}
+	log.Println(string(reqBody))
+	if err := json.Unmarshal(reqBody, &data); err != nil {
+		log.Printf("Body parse error, %v", err)
+		w.WriteHeader(400)
+		return
+	}
+	gs.gameState = game.NewGame(data.Column, data.Row)
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(reqBody) // TODO CHANGE RESPONSE
 }

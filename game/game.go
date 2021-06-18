@@ -15,7 +15,7 @@ const dead = 0
 
 type Game struct {
 	Board             board.Board
-	neighboursOptions []neighboursOption
+	neighboursOptions []Option
 	ChangedCells      []CellData
 }
 
@@ -25,9 +25,9 @@ type CellData struct {
 	State int `json:"state"`
 }
 
-type neighboursOption struct {
-	columnDif int
-	rowDif    int
+type Option struct {
+	Column int `json:"columns"`
+	Row    int `json:"rows"`
 }
 
 func NewGame(colLen, rowLen int) *Game {
@@ -42,7 +42,7 @@ func (g *Game) InitGame(colLen, rowLen int) {
 	g.Board.BoardSize.Rows = rowLen
 	g.Board.Board = board.CreateEmptyBoard(g.Board.BoardSize.Columns, g.Board.BoardSize.Rows)
 
-	g.neighboursOptions = []neighboursOption{
+	g.neighboursOptions = []Option{
 		{-1, 0},
 		{1, 0},
 		{0, -1},
@@ -141,8 +141,8 @@ func (g *Game) Tick() {
 func (g Game) isAlive(col, row int) bool {
 	liveNeighbourCount := 0
 	for _, option := range g.neighboursOptions {
-		if outOfBounds, _ := g.Board.IsOutofBounds(col+option.columnDif, row+option.rowDif); !outOfBounds {
-			if g.Board.Board[col+option.columnDif][row+option.rowDif] == alive {
+		if outOfBounds, _ := g.Board.IsOutofBounds(col+option.Column, row+option.Row); !outOfBounds {
+			if g.Board.Board[col+option.Column][row+option.Row] == alive {
 				liveNeighbourCount++
 			}
 		}

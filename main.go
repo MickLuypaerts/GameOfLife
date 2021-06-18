@@ -15,10 +15,10 @@ func main() {
 	port := ":3000"
 	mux := handlers.Mux(gameState)
 	log.Printf("Starting the server on %s\n", port)
-	err := openbrowser("http://localhost:3000")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err := openbrowser("http://localhost:3000")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 	log.Fatal(http.ListenAndServe(port, mux))
 }
 

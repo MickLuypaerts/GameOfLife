@@ -4,6 +4,7 @@ gameInfo.canvasLayerZero.addEventListener("click", clickCellFunc);
 document.getElementById("stepBtn").addEventListener("click", clickStepBtn);
 document.getElementById("runBtn").addEventListener("click", clickRunBtn);
 document.getElementById("resetBtn").addEventListener("click", clickResetBtn);
+document.getElementById("createBtn").addEventListener("click", clickCreateBtn)
 window.addEventListener("load", initGame);
 window.setInterval(() => {
     if (gameInfo.running) {
@@ -137,4 +138,44 @@ function clickResetBtn() {
         });
     let ctx = gameInfo.canvasLayerOne.getContext("2d");
     ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
+}
+
+
+function inputValidation(rowsInput, columnsInput) {
+    if (!isNaN(rowsInput) && !isNaN(columnsInput) && rowsInput > 0 && columnsInput > 0) {
+                return true;
+    } else {
+        alert(`${rowsInput} and ${columnsInput} are not valid input`);
+        return false;
+    }
+}
+
+function clickCreateBtn() {
+    let rowsInput = document.getElementById("rows").value;
+    let columnsInput = document.getElementById("columns").value;
+    if (inputValidation(rowsInput, columnsInput)) {
+        let data = JSON.stringify({ "columns": parseInt(columnsInput), "rows": parseInt(rowsInput) });
+        console.log(data);
+        sendToServer("/createnewboard", "POST", data)
+        .then(response => {
+            console.log(response);
+            gameInfo.rows = rowsInput;
+            gameInfo.columns = columnsInput;
+            for (let i = 0; i < gameInfo.columns; i++) {
+                for (let j = 0; j < gameInfo.rows; j++) {
+                    gameInfo.cells.set(i + j, 0);
+                }
+            }
+            let ctx = gameInfo.canvasLayerOne.getContext("2d");
+            ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
+            ctx = gameInfo.canvasLayerZero.getContext("2d");
+            ctx.clearRect(0, 0, gameInfo.canvasLayerZero.width, gameInfo.canvasLayerZero.height);
+
+            drawBorders();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    
 }
