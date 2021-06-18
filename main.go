@@ -7,9 +7,8 @@ import (
 	"net/http"
 )
 
-var gameState game.Game
-
 func main() {
+	gameState := game.Game{}
 	port := ":3000"
 	gameState.InitGame(50, 50)
 	mux := handlers.Mux(&gameState)
