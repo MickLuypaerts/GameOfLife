@@ -12,89 +12,6 @@ window.setInterval(() => {
     }
 }, 1000);
 
-function initGame() {
-    sendToServer("/getboardsize", "GET", null)
-        .then(data => {
-            gameInfo.rows = data.rows;
-            gameInfo.columns = data.columns;
-            for (let i = 0; i < gameInfo.columns; i++) {
-                for (let j = 0; j < gameInfo.rows; j++) {
-                    gameInfo.cells.set(i + j, 0);
-                }
-            }
-            drawBorders();
-        })
-}
-
-function clickRunBtn() {
-    gameInfo.running = !gameInfo.running;
-    document.getElementById("stepBtn").disabled = gameInfo.running;
-    let runBtn = document.getElementById("runBtn");
-    if (gameInfo.running) {
-        runBtn.textContent = "stop";
-    } else {
-        runBtn.textContent = "run";
-    }
-}
-
-function drawBorders() {
-    if (gameInfo.canvasLayerZero.getContext) {
-        let ctx = gameInfo.canvasLayerZero.getContext("2d");
-        ctx.fillStyle = "black"
-        for (let i = 0; i < gameInfo.columns; i++) {
-            ctx.fillRect(gameInfo.cellWidth() * i, 0, 1, gameInfo.canvasHeigth());
-        }
-        ctx.fillRect(gameInfo.canvasWidth() - 1, 0, 1, gameInfo.canvasHeigth());
-
-        for (let i = 0; i < gameInfo.rows; i++) {
-            ctx.fillRect(0, gameInfo.cellHeigth() * i, gameInfo.canvasWidth(), 1)
-        }
-        ctx.fillRect(0, gameInfo.canvasWidth() - 1, gameInfo.canvasWidth(), 1)
-    }
-}
-
-function fillCell(x, y, cellState) {
-    if (gameInfo.canvasLayerOne.getContext) {
-        let ctx = gameInfo.canvasLayerOne.getContext("2d");
-        if (cellState == 1) {
-            ctx.fillStyle = "red";
-            gameInfo.cells.set(x + y, 1)
-        } else {
-            ctx.fillStyle = "white";
-            gameInfo.cells.set(x + y, 0)
-        }
-        ctx.fillRect(gameInfo.cellWidth() * x, gameInfo.cellHeigth() * y, gameInfo.cellWidth(), gameInfo.cellHeigth());
-    }
-}
-
-function getMousePos(canvas, evt) {
-    let rect = canvas.getBoundingClientRect();
-    return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
-    };
-}
-
-function getCellCoord(mousePos) {
-    let x = Math.floor(mousePos.x / gameInfo.cellWidth());
-    let y = Math.floor(mousePos.y / gameInfo.cellHeigth());
-    return {
-        x: x,
-        y: y
-    };
-}
-
-async function sendToServer(url, method, data) {
-    const response = await fetch(gameInfo.baseURL + url, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: data
-    });
-    return response.json();
-}
-
 function clickCellFunc(e) {
     let mousePos = getMousePos(gameInfo.canvasLayerOne, e);
     let cellCoord = getCellCoord(mousePos);
@@ -111,13 +28,6 @@ function clickCellFunc(e) {
     console.log("sending %s to %s", data, gameInfo.baseURL+"/set");
 }
 
-async function stepCallBack(resp) {
-    console.log(resp);
-    for (let cell in resp) {
-        fillCell(resp[cell].x, resp[cell].y, resp[cell].state);
-    }
-}
-
 function clickStepBtn(e) {
     sendToServer("/step", "GET", null)
         .then(data => {
@@ -126,6 +36,17 @@ function clickStepBtn(e) {
         .catch((error) => {
             console.log("Error:", error);
         });
+}
+
+function clickRunBtn() {
+    gameInfo.running = !gameInfo.running;
+    document.getElementById("stepBtn").disabled = gameInfo.running;
+    let runBtn = document.getElementById("runBtn");
+    if (gameInfo.running) {
+        runBtn.textContent = "stop";
+    } else {
+        runBtn.textContent = "run";
+    }
 }
 
 function clickResetBtn() {
@@ -138,16 +59,6 @@ function clickResetBtn() {
         });
     let ctx = gameInfo.canvasLayerOne.getContext("2d");
     ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
-}
-
-
-function inputValidation(rowsInput, columnsInput) {
-    if (!isNaN(rowsInput) && !isNaN(columnsInput) && rowsInput > 0 && columnsInput > 0) {
-                return true;
-    } else {
-        alert(`${rowsInput} and ${columnsInput} are not valid input`);
-        return false;
-    }
 }
 
 function clickCreateBtn() {
@@ -177,5 +88,45 @@ function clickCreateBtn() {
             console.log(error);
         });
     }
-    
+}
+
+function initGame() {
+    sendToServer("/getboardsize", "GET", null)
+        .then(data => {
+            gameInfo.rows = data.rows;
+            gameInfo.columns = data.columns;
+            for (let i = 0; i < gameInfo.columns; i++) {
+                for (let j = 0; j < gameInfo.rows; j++) {
+                    gameInfo.cells.set(i + j, 0);
+                }
+            }
+            drawBorders();
+        })
+}
+
+async function sendToServer(url, method, data) {
+    const response = await fetch(gameInfo.baseURL + url, {
+        method: method,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: data
+    });
+    return response.json();
+}
+
+function stepCallBack(resp) {
+    console.log(resp);
+    for (let cell in resp) {
+        fillCell(resp[cell].x, resp[cell].y, resp[cell].state);
+    }
+}
+
+function inputValidation(rowsInput, columnsInput) {
+    if (!isNaN(rowsInput) && !isNaN(columnsInput) && rowsInput > 0 && columnsInput > 0) {
+                return true;
+    } else {
+        alert(`${rowsInput} and ${columnsInput} are not valid input`);
+        return false;
+    }
 }

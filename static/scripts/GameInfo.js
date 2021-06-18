@@ -21,5 +21,3 @@ class GameInfo {
         return this.canvasHeigth() / this.columns;
     }
 }
-
-
