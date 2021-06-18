@@ -55,7 +55,6 @@ function drawBorders() {
 function fillCell(x, y, cellState) {
     if (gameInfo.canvasLayerOne.getContext) {
         let ctx = gameInfo.canvasLayerOne.getContext("2d");
-        // ctx.globalCompositeOperation = "destination-over"; // draw on layer 2
         if (cellState == 1) {
             ctx.fillStyle = "red";
             gameInfo.cells.set(x + y, 1)
@@ -90,7 +89,7 @@ async function sendToServer(url, method, data) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: data // body data type must match "Content-Type" header
+        body: data
     });
     return response.json();
 }
