@@ -13,7 +13,6 @@ var gameState game.Game
 func main() {
 	gameState.InitGame(50, 50)
 	mux := defaultMux()
-	gameState.Board.Reset()
 	log.Fatal(http.ListenAndServe(":3000", mux))
 }
 
