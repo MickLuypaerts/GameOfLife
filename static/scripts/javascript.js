@@ -11,8 +11,6 @@ window.setInterval(() => {
     }
 }, 1000);
 
-
-
 function initGame() {
     sendToServer("/getboardsize", "GET", null)
         .then(data => {
@@ -119,6 +117,7 @@ async function stepCallBack(resp) {
         fillCell(resp[cell].x, resp[cell].y, resp[cell].state);
     }
 }
+
 function clickStepBtn(e) {
     sendToServer("/step", "GET", null)
         .then(data => {
@@ -137,11 +136,6 @@ function clickResetBtn() {
         .catch((error) => {
             console.log("Error:", error);
         });
-
-    // TODO MAKE all cells white
     let ctx = gameInfo.canvasLayerOne.getContext("2d");
     ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
 }
-
-// canvas can use save() and restore()
-// if (canvas.getContext) { // Fallback content https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage
