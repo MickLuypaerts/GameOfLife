@@ -12,15 +12,20 @@ var gameState game.Game
 
 func main() {
 	gameState.InitGame(50, 50)
-
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/", fs)
-	http.HandleFunc("/set", setCell)
-	http.HandleFunc("/step", step)
-	http.HandleFunc("/resetboard", resetBoard)
-	http.HandleFunc("/getboardsize", getBoardSize)
+	mux := defaultMux()
 	gameState.Board.Reset()
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Fatal(http.ListenAndServe(":3000", mux))
+}
+
+func defaultMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	fs := http.FileServer(http.Dir("./static"))
+	mux.Handle("/", fs)
+	mux.HandleFunc("/set", setCell)
+	mux.HandleFunc("/step", step)
+	mux.HandleFunc("/resetboard", resetBoard)
+	mux.HandleFunc("/getboardsize", getBoardSize)
+	return mux
 }
 
 func getBoardSize(w http.ResponseWriter, r *http.Request) {
