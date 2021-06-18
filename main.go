@@ -8,10 +8,9 @@ import (
 )
 
 func main() {
-	gameState := game.Game{}
+	gameState := game.NewGame(50, 50)
 	port := ":3000"
-	gameState.InitGame(50, 50)
-	mux := handlers.Mux(&gameState)
+	mux := handlers.Mux(gameState)
 	log.Printf("Starting the server on %s\n", port)
 	log.Fatal(http.ListenAndServe(port, mux))
 }

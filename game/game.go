@@ -30,6 +30,12 @@ type neighboursOption struct {
 	rowDif    int
 }
 
+func NewGame(colLen, rowLen int) *Game {
+	game := Game{}
+	game.InitGame(colLen, rowLen)
+	return &game
+}
+
 func (g *Game) InitGame(colLen, rowLen int) {
 
 	g.Board.BoardSize.Columns = colLen
