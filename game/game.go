@@ -82,12 +82,10 @@ func readCsv(fileName string) ([][]string, error) {
 }
 
 func (g Game) PrintBoard() {
-
 	g.Board.Print()
 }
 
 func (g *Game) Set(col, row, value int) {
-
 	if outOfBounds, err := g.Board.IsOutofBounds(col, row); !outOfBounds {
 		g.Board.Board[col][row] = value
 	} else {

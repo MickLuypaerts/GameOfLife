@@ -1,7 +1,5 @@
 package main
 
-// todo move handlers
-
 import (
 	"./game"
 	"encoding/json"

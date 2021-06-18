@@ -34,7 +34,6 @@ func (b Board) Print() {
 			} else {
 				fmt.Printf("\033[1;32m#\033[0m")
 			}
-
 		}
 		fmt.Printf("\n")
 	}
@@ -57,9 +56,7 @@ func CreateEmptyBoard(colLen, rowLen int) [][]int {
 }
 
 func (b Board) IsOutofBounds(col, row int) (bool, error) {
-
 	if col < 0 || row < 0 || col > b.BoardSize.Columns-1 || row > b.BoardSize.Rows-1 {
-		//fmt.Println("out of bounds")
 		return true, fmt.Errorf("index out of range [%d][%d] of [%d][%d]", col, row, b.BoardSize.Columns-1, b.BoardSize.Rows-1)
 	}
 	return false, nil
