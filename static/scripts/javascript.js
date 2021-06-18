@@ -25,13 +25,16 @@ function clickCellFunc(e) {
         .catch((error) => {
             console.log(error);
         });
-    console.log("sending %s to %s", data, gameInfo.baseURL+"/set");
+    console.log("sending %s to %s", data, gameInfo.baseURL + "/set");
 }
 
 function clickStepBtn(e) {
     sendToServer("/step", "GET", null)
-        .then(data => {
-            stepCallBack(data);
+        .then(response => {
+            console.log(response);
+            for (let cell in response) {
+                fillCell(response[cell].x, response[cell].y, response[cell].state);
+            }
         })
         .catch((error) => {
             console.log("Error:", error);
@@ -68,38 +71,35 @@ function clickCreateBtn() {
         let data = JSON.stringify({ "columns": parseInt(columnsInput), "rows": parseInt(rowsInput) });
         console.log(data);
         sendToServer("/createnewboard", "POST", data)
-        .then(response => {
-            console.log(response);
-            gameInfo.rows = rowsInput;
-            gameInfo.columns = columnsInput;
-            for (let i = 0; i < gameInfo.columns; i++) {
-                for (let j = 0; j < gameInfo.rows; j++) {
-                    gameInfo.cells.set(i + j, 0);
-                }
-            }
-            let ctx = gameInfo.canvasLayerOne.getContext("2d");
-            ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
-            ctx = gameInfo.canvasLayerZero.getContext("2d");
-            ctx.clearRect(0, 0, gameInfo.canvasLayerZero.width, gameInfo.canvasLayerZero.height);
+            .then(response => {
+                console.log(response);
+                gameInfo.createNewBoard(rowsInput, columnsInput);
 
-            drawBorders();
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+                let ctx = gameInfo.canvasLayerOne.getContext("2d");
+                ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
+                ctx = gameInfo.canvasLayerZero.getContext("2d");
+                ctx.clearRect(0, 0, gameInfo.canvasLayerZero.width, gameInfo.canvasLayerZero.height);
+                drawBorders();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+}
+
+function inputValidation(rowsInput, columnsInput) {
+    if (!isNaN(rowsInput) && !isNaN(columnsInput) && rowsInput > 0 && columnsInput > 0) {
+        return true;
+    } else {
+        alert(`${rowsInput} and ${columnsInput} are not valid input`);
+        return false;
     }
 }
 
 function initGame() {
     sendToServer("/getboardsize", "GET", null)
         .then(data => {
-            gameInfo.rows = data.rows;
-            gameInfo.columns = data.columns;
-            for (let i = 0; i < gameInfo.columns; i++) {
-                for (let j = 0; j < gameInfo.rows; j++) {
-                    gameInfo.cells.set(i + j, 0);
-                }
-            }
+            gameInfo.createNewBoard(data.rows, data.columns);
             drawBorders();
         })
 }
@@ -113,20 +113,4 @@ async function sendToServer(url, method, data) {
         body: data
     });
     return response.json();
-}
-
-function stepCallBack(resp) {
-    console.log(resp);
-    for (let cell in resp) {
-        fillCell(resp[cell].x, resp[cell].y, resp[cell].state);
-    }
-}
-
-function inputValidation(rowsInput, columnsInput) {
-    if (!isNaN(rowsInput) && !isNaN(columnsInput) && rowsInput > 0 && columnsInput > 0) {
-                return true;
-    } else {
-        alert(`${rowsInput} and ${columnsInput} are not valid input`);
-        return false;
-    }
 }
