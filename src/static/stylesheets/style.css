@@ -1,0 +1,9 @@
+#viewport {
+    position: relative;
+}
+
+
+#viewport canvas{
+    position: absolute;
+    background-color: transparent;
+}
