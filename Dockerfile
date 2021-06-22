@@ -8,11 +8,10 @@ WORKDIR /go/src/github.com/MickLuypaerts/GameOfLife
 COPY /src/ .
 
 RUN go build -ldflags="-w -s" -o /go/bin/GameOfLife
-CMD [ "/go/bin/GameOfLife" ]
 
-# FROM scratch
-# EXPOSE 8080
-# WORKDIR /app/
-# COPY --from=builder /go/bin/GameOfLife .
-# COPY --from=builder /go/src/github.com/MickLuypaerts/GameOfLife/static /app/static
-# ENTRYPOINT ["./GameOfLife" ]
+FROM scratch
+EXPOSE 8080
+WORKDIR /app/
+COPY --from=builder /go/bin/GameOfLife .
+COPY --from=builder /go/src/github.com/MickLuypaerts/GameOfLife/static /app/static
+ENTRYPOINT ["./GameOfLife" ]
