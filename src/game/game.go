@@ -3,7 +3,7 @@ package game
 import (
 	"encoding/csv"
 	"fmt"
-	"gameoflife/board" // "github.com/MickLuypaerts/GameOfLife/tree/master/src/board" // "../board"
+	"gameoflife/board"
 	"log"
 	"os"
 	"strconv"

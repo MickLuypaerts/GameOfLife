@@ -1,10 +1,8 @@
 package main
 
-// https://semaphoreci.com/community/tutorials/how-to-deploy-a-go-web-application-with-docker
-
 import (
-	"gameoflife/game"     // "github.com/MickLuypaerts/GameOfLife/tree/master/src/game"     // "./game"
-	"gameoflife/handlers" // "github.com/MickLuypaerts/GameOfLife/tree/master/src/handlers" // "./handlers"
+	"gameoflife/game"
+	"gameoflife/handlers"
 	"log"
 	"net/http"
 )

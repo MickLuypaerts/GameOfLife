@@ -3,10 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"gameoflife/game" // "../game"
+	"gameoflife/game"
 	"io/ioutil"
 	"log"
-	"net/http" // https://golang.org/pkg/net/http/#pkg-constants
+	"net/http"
 )
 
 type gameHandlers struct {
