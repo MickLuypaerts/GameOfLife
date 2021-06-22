@@ -91,11 +91,12 @@ func (g Game) PrintBoard() {
 	g.Board.Print()
 }
 
-func (g *Game) Set(col, row, value int) {
+func (g *Game) Set(col, row, value int) error {
 	if outOfBounds, err := g.Board.IsOutofBounds(col, row); !outOfBounds {
 		g.Board.Board[col][row] = value
+		return nil
 	} else {
-		log.Fatal(err)
+		return err
 	}
 }
 

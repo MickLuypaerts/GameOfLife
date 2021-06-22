@@ -21,9 +21,6 @@ function clickCellFunc(e) {
     sendToServer("/set", "POST", data)
         .then(response => {
             console.log(response);
-        })
-        .catch((error) => {
-            console.log(error);
         });
     console.log("sending %s to %s", data, gameInfo.baseURL + "/set");
 }
@@ -32,12 +29,7 @@ function clickStepBtn(e) {
     sendToServer("/step", "GET", null)
         .then(response => {
             console.log(response);
-            for (let cell in response) {
-                fillCell(response[cell].x, response[cell].y, response[cell].state);
-            }
-        })
-        .catch((error) => {
-            console.log("Error:", error);
+            response.map(cell => fillCell(cell.x, cell.y, cell.state));
         });
 }
 
@@ -55,10 +47,7 @@ function clickRunBtn() {
 function clickResetBtn() {
     sendToServer("/resetboard", "GET", null)
         .then(response => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.log("Error:", error);
+            console.log(response.body.text());
         });
     let ctx = gameInfo.canvasLayerOne.getContext("2d");
     ctx.clearRect(0, 0, gameInfo.canvasLayerOne.width, gameInfo.canvasLayerOne.height);
@@ -98,24 +87,14 @@ function inputValidation(rowsInput, columnsInput) {
 
 function initGame() {
     sendToServer("/getboardsize", "GET", null)
-        .then(data => {
-            gameInfo.createNewBoard(data.rows, data.columns);
+        .then(response => {
+            console.log(response);
+            gameInfo.createNewBoard(response.rows, response.columns);
             drawBorders();
         })
 }
 
 async function sendToServer(url, method, data) {
-    const response = await fetch(gameInfo.baseURL + url, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: data
-    });
-    return response.json();
-}
-
-const sendToServerTest = async (url, method, data) => {
     try {
         const response = await fetch(gameInfo.baseURL + url, {
             method: method,
@@ -124,9 +103,16 @@ const sendToServerTest = async (url, method, data) => {
             },
             body: data
         });
-        console.log(response.status);
-        const retData = await response.json();
-        console.log(retData);
+        if (response.status != 200) {
+            throw response.statusText
+        }
+        try {
+            const jsonData = await response.json();
+            return jsonData
+        }
+        catch {
+            return response
+        }
 
     } catch (error) {
         console.error(error);
