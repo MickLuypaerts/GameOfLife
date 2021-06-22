@@ -1,9 +1,9 @@
 package game
 
 import (
-	"../board"
 	"encoding/csv"
 	"fmt"
+	"gameoflife/board" // "github.com/MickLuypaerts/GameOfLife/tree/master/src/board" // "../board"
 	"log"
 	"os"
 	"strconv"

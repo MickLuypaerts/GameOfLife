@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"../game"
 	"encoding/json"
 	"fmt"
+	"gameoflife/game" // "../game"
 	"io/ioutil"
 	"log"
 	"net/http" // https://golang.org/pkg/net/http/#pkg-constants
