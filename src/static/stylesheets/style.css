@@ -7,3 +7,7 @@
     position: absolute;
     background-color: transparent;
 }
+
+input {
+    width: 30px;
+}
