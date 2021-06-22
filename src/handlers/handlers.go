@@ -13,7 +13,7 @@ type gameHandlers struct {
 	gameState *game.Game
 }
 
-func Mux(gameState *game.Game) *http.ServeMux {
+func NewMux(gameState *game.Game) *http.ServeMux {
 	mux := http.NewServeMux()
 	var gameHandlers gameHandlers
 	gameHandlers.gameState = gameState

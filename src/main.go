@@ -15,7 +15,7 @@ import (
 func main() {
 	gameState := game.NewGame(50, 50)
 	port := ":3000"
-	mux := handlers.Mux(gameState)
+	mux := handlers.NewMux(gameState)
 	log.Printf("Starting the server on %s\n", port)
 	// err := openbrowser("http://localhost:3000")
 	//if err != nil {
