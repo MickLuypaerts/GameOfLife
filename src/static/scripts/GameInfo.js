@@ -6,7 +6,7 @@ class GameInfo {
         this.canvasLayerOne = document.getElementById("board-layer-1");
         this.cells = new Map();
         this.running = false;
-        this.baseURL = "http://localhost:8080";
+        this.baseURL = window.location.href;
     }
 
     createNewBoard(rows, columns) {
