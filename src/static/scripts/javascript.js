@@ -86,7 +86,6 @@ function inputValidation(rowsInput, columnsInput) {
 }
 
 function initGame() {
-    gameInfo.baseURL = window.location.href;
     sendToServer("/getboardsize", "GET", null)
         .then(response => {
             console.log(response);
