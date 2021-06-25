@@ -6,7 +6,7 @@ import (
 
 type Board struct {
 	BoardSize BoardSize
-	Board     [][]int
+	Board     [][]bool
 }
 
 type BoardSize struct {
@@ -14,13 +14,13 @@ type BoardSize struct {
 	Columns int `json:"columns"`
 }
 
-const alive = 1
-const dead = 0
+// const alive = 1
+// const dead = 0
 
 func (b *Board) Reset() {
 	for i := 0; i < b.BoardSize.Columns; i++ {
 		for j := 0; j < b.BoardSize.Rows; j++ {
-			b.Board[i][j] = 0
+			b.Board[i][j] = false
 		}
 	}
 }
@@ -29,7 +29,7 @@ func (b Board) Print() {
 
 	for i := 0; i < b.BoardSize.Columns; i++ {
 		for j := 0; j < b.BoardSize.Rows; j++ {
-			if b.Board[i][j] == 1 {
+			if b.Board[i][j] == true {
 				fmt.Printf("\033[1;31m#\033[0m")
 			} else {
 				fmt.Printf("\033[1;32m#\033[0m")
@@ -40,16 +40,16 @@ func (b Board) Print() {
 	fmt.Printf("\n")
 }
 
-func CreateEmptyBoard(colLen, rowLen int) [][]int {
-	board := make([][]int, colLen)
-	rows := make([]int, colLen*rowLen)
+func CreateEmptyBoard(colLen, rowLen int) [][]bool {
+	board := make([][]bool, colLen)
+	rows := make([]bool, colLen*rowLen)
 
 	for i := 0; i < colLen; i++ {
 		board[i] = rows[i*rowLen : (i+1)*rowLen]
 	}
 	for i := 0; i < colLen; i++ {
 		for j := 0; j < rowLen; j++ {
-			board[i][j] = 0
+			board[i][j] = false
 		}
 	}
 	return board
