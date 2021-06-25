@@ -18,7 +18,7 @@ function clickCellFunc(e) {
     let cellState = +!gameInfo.cells.get(cellCoord.x + cellCoord.y);
     fillCell(cellCoord.x, cellCoord.y, cellState);
     let data = JSON.stringify({ "x": parseInt(cellCoord.x), "y": parseInt(cellCoord.y), "state": parseInt(cellState) });
-    sendToServer("/set", "POST", data)
+    sendToServer("set", "POST", data)
         .then(response => {
             console.log(response);
         });
@@ -26,7 +26,7 @@ function clickCellFunc(e) {
 }
 
 function clickStepBtn(e) {
-    sendToServer("/step", "GET", null)
+    sendToServer("step", "GET", null)
         .then(response => {
             console.log(response);
             response.map(cell => fillCell(cell.x, cell.y, cell.state));
@@ -45,7 +45,7 @@ function clickRunBtn() {
 }
 
 function clickResetBtn() {
-    sendToServer("/resetboard", "GET", null)
+    sendToServer("resetboard", "GET", null)
         .then(response => {
             console.log(response.body.text());
         });
@@ -59,7 +59,7 @@ function clickCreateBtn() {
     if (inputValidation(rowsInput, columnsInput)) {
         let data = JSON.stringify({ "columns": parseInt(columnsInput), "rows": parseInt(rowsInput) });
         console.log(data);
-        sendToServer("/createnewboard", "POST", data)
+        sendToServer("createnewboard", "POST", data)
             .then(response => {
                 console.log(response);
                 gameInfo.createNewBoard(rowsInput, columnsInput);
@@ -86,7 +86,7 @@ function inputValidation(rowsInput, columnsInput) {
 }
 
 function initGame() {
-    sendToServer("/getboardsize", "GET", null)
+    sendToServer("getboardsize", "GET", null)
         .then(response => {
             console.log(response);
             gameInfo.createNewBoard(response.rows, response.columns);

@@ -58,7 +58,6 @@ func (gs *gameHandlers) step(w http.ResponseWriter, r *http.Request) {
 	}
 	gs.gameState.Tick()
 	log.Printf("Changed cells: %+v\n", gs.gameState.ChangedCells)
-	//w.WriteHeader(200)
 	json.NewEncoder(w).Encode(gs.gameState.ChangedCells)
 }
 
@@ -68,7 +67,6 @@ func (gs *gameHandlers) resetBoard(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("reseting board.")
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	//w.Write([]byte("the board has been reset."))
 	fmt.Fprintln(w, "the board has been reset.")
 	gs.gameState.Board.Reset()
 }
@@ -99,7 +97,6 @@ func (gs *gameHandlers) createNewBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	gs.gameState = game.NewGame(data.Column, data.Row)
-	//w.WriteHeader(200)
 	json.NewEncoder(w).Encode(reqBody) // TODO CHANGE RESPONSE
 }
 
