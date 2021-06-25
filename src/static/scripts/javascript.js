@@ -15,7 +15,7 @@ window.setInterval(() => {
 function clickCellFunc(e) {
     let mousePos = getMousePos(gameInfo.canvasLayerOne, e);
     let cellCoord = getCellCoord(mousePos);
-    let cellState = !gameInfo.cells.get(cellCoord.x + cellCoord.y);
+    let cellState = !gameInfo.cells.get(cellsToMapKey(cellCoord.x, cellCoord.y));
     fillCell(cellCoord.x, cellCoord.y, cellState);
     let data = JSON.stringify({ "x": parseInt(cellCoord.x), "y": parseInt(cellCoord.y), "state": cellState });
     sendToServer("set", "POST", data)

@@ -19,10 +19,10 @@ function fillCell(x, y, cellState) {
         let ctx = gameInfo.canvasLayerOne.getContext("2d");
         if (cellState == 1) {
             ctx.fillStyle = "red";
-            gameInfo.cells.set(x + y, 1)
+            gameInfo.cells.set(cellsToMapKey(x,y), 1)
         } else {
             ctx.fillStyle = "white";
-            gameInfo.cells.set(x + y, 0)
+            gameInfo.cells.set(cellsToMapKey(x,y), 0)
         }
         ctx.fillRect(gameInfo.cellWidth() * x, gameInfo.cellHeigth() * y, gameInfo.cellWidth(), gameInfo.cellHeigth());
     }

@@ -15,7 +15,7 @@ class GameInfo {
         this.cells.clear();
         for (let i = 0; i < this.columns; i++) {
             for (let j = 0; j < this.rows; j++) {
-                this.cells.set(i + j, false);
+                this.cells.set(cellsToMapKey(i,j), false);
             }
         }
     }
@@ -35,4 +35,8 @@ class GameInfo {
     cellHeigth() {
         return this.canvasHeigth() / this.columns;
     }
+}
+
+function cellsToMapKey(x, y) {
+    return `${x}-${y}`
 }
