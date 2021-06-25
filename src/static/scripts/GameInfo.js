@@ -15,7 +15,7 @@ class GameInfo {
         this.cells.clear();
         for (let i = 0; i < this.columns; i++) {
             for (let j = 0; j < this.rows; j++) {
-                this.cells.set(i + j, 0);
+                this.cells.set(i + j, false);
             }
         }
     }
