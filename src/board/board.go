@@ -14,9 +14,6 @@ type BoardSize struct {
 	Columns int `json:"columns"`
 }
 
-// const alive = 1
-// const dead = 0
-
 func (b *Board) Reset() {
 	for i := 0; i < b.BoardSize.Columns; i++ {
 		for j := 0; j < b.BoardSize.Rows; j++ {
