@@ -10,9 +10,6 @@ import (
 	"time"
 )
 
-const alive = 1
-const dead = 0
-
 type Game struct {
 	Board             board.Board
 	neighboursOptions []Option
@@ -20,9 +17,9 @@ type Game struct {
 }
 
 type CellData struct {
-	X     int `json:"x"`
-	Y     int `json:"y"`
-	State int `json:"state"`
+	X     int  `json:"x"`
+	Y     int  `json:"y"`
+	State bool `json:"state"`
 }
 
 type Option struct {
@@ -63,7 +60,7 @@ func (g *Game) InitGameFromCSV(filePath string) {
 
 	for i := 0; i < g.Board.BoardSize.Columns; i++ {
 		for j := 0; j < g.Board.BoardSize.Rows; j++ {
-			g.Board.Board[i][j], err = strconv.Atoi(records[i][j])
+			g.Board.Board[i][j], err = strconv.ParseBool(records[i][j])
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(2)
@@ -91,7 +88,7 @@ func (g Game) PrintBoard() {
 	g.Board.Print()
 }
 
-func (g *Game) Set(col, row, value int) error {
+func (g *Game) Set(col int, row int, value bool) error {
 	if outOfBounds, err := g.Board.IsOutofBounds(col, row); !outOfBounds {
 		g.Board.Board[col][row] = value
 		return nil
@@ -115,21 +112,21 @@ func (g *Game) Tick() {
 	for i := 0; i < g.Board.BoardSize.Columns; i++ {
 		for j := 0; j < g.Board.BoardSize.Rows; j++ {
 			if g.isAlive(i, j) {
-				tempBoard[i][j] = alive
+				tempBoard[i][j] = true
 				if tempBoard[i][j] != g.Board.Board[i][j] {
 					g.ChangedCells = append(g.ChangedCells, CellData{
 						X:     i,
 						Y:     j,
-						State: alive,
+						State: true,
 					})
 				}
 			} else {
-				tempBoard[i][j] = dead
+				tempBoard[i][j] = false
 				if tempBoard[i][j] != g.Board.Board[i][j] {
 					g.ChangedCells = append(g.ChangedCells, CellData{
 						X:     i,
 						Y:     j,
-						State: dead,
+						State: false,
 					})
 				}
 			}
@@ -143,12 +140,12 @@ func (g Game) isAlive(col, row int) bool {
 	liveNeighbourCount := 0
 	for _, option := range g.neighboursOptions {
 		if outOfBounds, _ := g.Board.IsOutofBounds(col+option.Column, row+option.Row); !outOfBounds {
-			if g.Board.Board[col+option.Column][row+option.Row] == alive {
+			if g.Board.Board[col+option.Column][row+option.Row] == true {
 				liveNeighbourCount++
 			}
 		}
 	}
-	if liveNeighbourCount == 3 || (g.Board.Board[col][row] == alive && liveNeighbourCount == 2) {
+	if liveNeighbourCount == 3 || (g.Board.Board[col][row] == true && liveNeighbourCount == 2) {
 		return true
 	} else {
 		return false
